@@ -14,6 +14,28 @@ using std::vector;
 using std::ofstream;
 using std::ifstream;
 
+class employeeDirectory {
+public:
+	char lastName[22];
+	char firstName[22];
+	char position[22];
+	int empID;
+	char phoneNumber[22];
+	employeeDirectory();
+	~employeeDirectory();
+};
+
+employeeDirectory::employeeDirectory() {
+
+}
+
+employeeDirectory::~employeeDirectory() {
+	delete lastName;
+	delete firstName;
+	delete position;
+	delete phoneNumber;
+}
+
 /*
 	TODO:
 	[X]Add employee Directory to main menu
@@ -62,11 +84,78 @@ bool directoryPasswordCheck() {
 
 }
 
-void passwordChange() {
-	// TODO: 
-	// [] request user input to modify password
-	// [] write new password to password file
-	// [] close the file with new password saved to file
+bool does_file_exist() {
+	ifstream directoryFile("directoryFile.txt");
+	return directoryFile.good();
+}
+
+void createNewDirectory() {
+	/*
+		TODO:
+		[X] comma delimited
+		[X] last name, first name, position, Emp. Id, Phone Number
+		[] offer option to edit directory
+	*/
+	//ofstream createDirectoryFile("directoryFile");
+	char userDecideToFillDirectory;
+	char lastName[20];
+	char firstName[20];
+	char position[20];
+	int empID;
+	int phoneNumber;
+
+	cout << "Would you like to fill in the directory now? [y/n]: ";
+	cin >> userDecideToFillDirectory;
+
+	if ((userDecideToFillDirectory != 'y')) {
+		cout << "An empty file has been created." << endl;
+		ofstream createDirectoryFile("directoryFile.txt");
+		createDirectoryFile.close();
+	}
+	else {
+		cout << "The file is comma delimited with order: ";
+		cout << "Last Name, First Name, Position, Employee Id, Phone Number" << endl;
+		
+		bool exitLoop = false; // use to stop inputting data in directory file
+		while (!exitLoop) {
+			ofstream createDirectoryFile("directoryFile.txt", std::ios::app | std::ios::out);
+
+			cout << "Last Name: ";
+			cin >> lastName;
+
+			cout << "First Name: ";
+			cin >> firstName;
+
+			cout << "Position: ";
+			cin >> position;
+
+			cout << "Employee Id: ";
+			cin >> empID;
+
+			cout << "Phone Number: ";
+			cin >> phoneNumber;
+
+			createDirectoryFile << lastName << "," << firstName << "," << position
+				<< "," << empID << "," << phoneNumber << endl;
+			createDirectoryFile.close();
+			
+			char exitHere;
+			cout << "Would you like to exit this program? [y/n]: ";
+			cin >> exitHere;
+
+			if ((exitHere == 'y')) {
+				exitLoop = true;
+			}
+		}
+	}
+
+
+}
+
+void passwordChange() { 
+	// [X] request user input to modify password
+	// [X] write new password to password file
+	// [X] close the file with new password saved to file
 
 	char newPassword[17];
 	cout << "What is the new password: ";
@@ -90,18 +179,69 @@ void passwordChange() {
 
 void editDirectory() {
 
+	char lastName[20];
+	char firstName[20];
+	char position[20];
+	int empID;
+	int phoneNumber;
+
+	cout << "The file is comma delimited with order: ";
+	cout << "Last Name, First Name, Position, Employee Id, Phone Number" << endl;
+
+	bool exitLoop = false; // use to stop inputting data in directory file
+	while (!exitLoop) {
+		ofstream createDirectoryFile("directoryFile.txt", std::ios::app | std::ios::out);
+
+		cout << "Last Name: ";
+		cin >> lastName;
+
+		cout << "First Name: ";
+		cin >> firstName;
+
+		cout << "Position: ";
+		cin >> position;
+
+		cout << "Employee Id: ";
+		cin >> empID;
+
+		cout << "Phone Number: ";
+		cin >> phoneNumber;
+
+		createDirectoryFile << lastName << "," << firstName << "," << position
+			<< "," << empID << "," << phoneNumber << endl;
+		createDirectoryFile.close();
+
+		char exitHere;
+		cout << "Would you like to exit this program? [y/n]: ";
+		cin >> exitHere;
+
+		if ((exitHere == 'y')) {
+			exitLoop = true;
+		}
+	}
+
+
+
 }
 
 void viewDirectory() {
 	// TODO:
-	// display the directory
+	// [] display the directory
+
+	vector <char *> directoryContents;
+	char testDirectory[256];
 
 	ifstream directoryFile("directoryFile.txt");
 	if (directoryFile.is_open()) {
-		/*while (!directoryFile.eof()) {
-
-			cout << endl;
-		}*/
+		while (!directoryFile.eof()){
+				directoryFile.getline(testDirectory, 256);
+				//directoryFile.getline(directoryContents, 20);
+				if (std::strncmp(testDirectory,"",1) == 0) {
+				}
+				else {
+					cout << "contents are: " << testDirectory << endl;
+				}
+			}
 		//directoryFile.open("directoryFile");
 		//system("notepad.exe directoryFile");
 		directoryFile.close();
@@ -109,7 +249,6 @@ void viewDirectory() {
 	else {
 		cout << "Directory not found." << endl;
 	}
-	cout << "display some shit" << endl;
 }
 
 void modifyDirectory() {
@@ -147,7 +286,14 @@ void modifyDirectory() {
 				break;
 			case 2:
 				cout << "Modify the directory." << endl;
-				editDirectory();
+				if (does_file_exist()) {
+					editDirectory();
+				}
+				else {
+					cout << "The file does not currently exist." << endl;
+					cout << "Creating a directory file" << endl;
+					createNewDirectory();
+				}
 				break;
 			case 3:
 				cout << "Viewing the Directory." << endl;
@@ -160,10 +306,10 @@ void modifyDirectory() {
 				cout << "Invalid input." << endl;
 				break;
 			}
-		} while (modifyUserInput <= 0 || modifyUserInput != modifyExit);
+		} while (modifyUserInput <= 0 || modifyUserInput != modifyExit || modifyUserInput > modifyOptionsMenu.size());
 	}
 	else {
-		cout << "bad shit." << endl;
+		cout << "Sorry, incorrect password." << endl;
 	}
 }
 
@@ -177,6 +323,7 @@ void employeeDir() {
 	char dirOptionExit[5] = "Exit";*/
 
 	vector <char const*> dirOptions;
+	vector <employeeDirectory> employeeData;
 
 	dirOptions.push_back("View Directory");
 	dirOptions.push_back("Modify Directory");
