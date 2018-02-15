@@ -77,7 +77,9 @@ void passwordChange() {
 	cin >> passwordVerify;
 	
 	if (std::strncmp(newPassword, passwordVerify, 17) == 0) {
+		// TODO setuid
 		ofstream modifyPasswordFile("accessFile.txt");
+		// TODO unsetuid
 		modifyPasswordFile.write(newPassword, std::strlen(newPassword));
 		modifyPasswordFile.close(); // close the file
 	}
