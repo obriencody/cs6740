@@ -4,7 +4,7 @@
 #include <fstream>
 #include <stdio.h>
 #include <sys/types.h>
-#include <sys/stat.h>
+#include <unistd.h>
 
 // custom made header files
 #include "employeeDir.h"
@@ -17,9 +17,8 @@ using std::ofstream;
 using std::ifstream;
 
 // save the current uid
-static uid_t current_uid = getuid();
+//static uid_t current_uid = getuid();
 
-#pragma warning(disable : 4996)
 
 class employeeDirectory {
 public:
@@ -90,7 +89,7 @@ bool directoryPasswordCheck() {
 	actualPasswordFile.close(); // close the file
 
 	// cout << "Read from the file " << password << endl;
-	if (std::strncmp(password, userInputPassword, 17) == 0) {
+	if (strncmp(password, userInputPassword, 17) == 0) {
 		return true;
 	}
 	else return false;
@@ -176,11 +175,11 @@ void passwordChange() {
 	char passwordVerify[17];
 	cin >> passwordVerify;
 	
-	if (std::strncmp(newPassword, passwordVerify, 17) == 0) {
+	if (strncmp(newPassword, passwordVerify, 17) == 0) {
 		// TODO setuid
 		ofstream modifyPasswordFile("accessFile.txt");
 		// TODO unsetuid
-		modifyPasswordFile.write(newPassword, std::strlen(newPassword));
+		modifyPasswordFile.write(newPassword, strlen(newPassword));
 		modifyPasswordFile.close(); // close the file
 	}
 	else {
@@ -236,11 +235,11 @@ void editAccountDirectory() {
 
 		}
 		else {
-			strncpy_s(lastName, strtok(testDirectory, ","), 20);
-			strncpy_s(firstName, strtok(NULL, ","), 20);
-			strncpy_s(position, strtok(NULL, ","), 20);
-			strncpy_s(empID, strtok(NULL, ","), 7);
-			strncpy_s(phoneNumber, strtok(NULL, ","), 12);
+			strncpy(lastName, strtok(testDirectory, ","), 20);
+			strncpy(firstName, strtok(NULL, ","), 20);
+			strncpy(position, strtok(NULL, ","), 20);
+			strncpy(empID, strtok(NULL, ","), 7);
+			strncpy(phoneNumber, strtok(NULL, ","), 12);
 			if (((strncmp(empID, inputEmpID, 7) == 0) && (delAccount == 'y')) || ((strncmp(phoneNumber, inputPhone, 12) == 0) && (delAccount == 'y'))) {
 				ofstream createDirectoryFile("directoryFileNew.txt", std::ios::app | std::ios::out);
 				createDirectoryFile.close();
@@ -353,7 +352,7 @@ void viewDirectory() {
 	if (directoryFile.is_open()) {
 		while (!directoryFile.eof()){
 				directoryFile.getline(testDirectory, 256);
-				if (std::strncmp(testDirectory,"",1) == 0) {
+				if (strncmp(testDirectory,"",1) == 0) {
 				}
 				else {
 					cout << "contents are: " << testDirectory << endl;
@@ -427,7 +426,7 @@ void modifyDirectory() {
 				cout << "Invalid input." << endl;
 				break;
 			}
-		} while (modifyUserInput <= 0 || modifyUserInput != modifyExit || modifyUserInput > modifyOptionsMenu.size());
+		} while (modifyUserInput <= 0 || modifyUserInput != modifyExit);
 	}
 	else {
 		cout << "Sorry, incorrect password." << endl;
