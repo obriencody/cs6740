@@ -1,9 +1,10 @@
 #include <iostream>
-#include <string.h>
 #include <vector>
 #include <limits>
 #include <fstream>
 #include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 // custom made header files
 #include "employeeDir.h"
@@ -14,6 +15,9 @@ using std::endl;
 using std::vector;
 using std::ofstream;
 using std::ifstream;
+
+// save the current uid
+static uid_t current_uid = getuid();
 
 #pragma warning(disable : 4996)
 
@@ -85,7 +89,7 @@ bool directoryPasswordCheck() {
 
 	actualPasswordFile.close(); // close the file
 
-	cout << "Read from the file " << password << endl;
+	// cout << "Read from the file " << password << endl;
 	if (std::strncmp(password, userInputPassword, 17) == 0) {
 		return true;
 	}
@@ -157,8 +161,6 @@ void createNewDirectory() {
 			}
 		}
 	}
-
-
 }
 
 void passwordChange() { 
@@ -239,11 +241,11 @@ void editAccountDirectory() {
 			strncpy_s(position, strtok(NULL, ","), 20);
 			strncpy_s(empID, strtok(NULL, ","), 7);
 			strncpy_s(phoneNumber, strtok(NULL, ","), 12);
-			if ((strncmp(empID, inputEmpID, 7) == 0) && (delAccount == 'y')) {
+			if (((strncmp(empID, inputEmpID, 7) == 0) && (delAccount == 'y')) || ((strncmp(phoneNumber, inputPhone, 12) == 0) && (delAccount == 'y'))) {
 				ofstream createDirectoryFile("directoryFileNew.txt", std::ios::app | std::ios::out);
 				createDirectoryFile.close();
 			}
-			else if (strncmp(empID, inputEmpID, 7) == 0) {
+			else if ((strncmp(empID, inputEmpID, 7) == 0) || (strncmp(phoneNumber, inputPhone, 12) == 0)) {
 				ofstream createDirectoryFile("directoryFileNew.txt", std::ios::app | std::ios::out);
 
 				cout << "Last Name: ";
@@ -339,9 +341,6 @@ void editDirectory() {
 			exitLoop = true;
 		}
 	}
-
-
-
 }
 
 void viewDirectory() {
@@ -354,15 +353,12 @@ void viewDirectory() {
 	if (directoryFile.is_open()) {
 		while (!directoryFile.eof()){
 				directoryFile.getline(testDirectory, 256);
-				//directoryFile.getline(directoryContents, 20);
 				if (std::strncmp(testDirectory,"",1) == 0) {
 				}
 				else {
 					cout << "contents are: " << testDirectory << endl;
 				}
 			}
-		//directoryFile.open("directoryFile");
-		//system("notepad.exe directoryFile");
 		directoryFile.close();
 	}
 	else {
@@ -375,12 +371,13 @@ void modifyDirectory() {
 		TODO:
 		[X] request and verify password
 		[X] display directory?
-		[] allow the user to modify the directory
+		[X] allow the user to modify the directory
 		[X] save the directory
 		[X] change password
 	*/
 
 	if (directoryPasswordCheck()) {
+
 		vector <char const*> modifyOptionsMenu;
 		
 		modifyOptionsMenu.push_back("Change Password");
