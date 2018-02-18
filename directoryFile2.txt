@@ -1,4 +1,5 @@
 obrien,cody,engineer,234532,987654321
+matt,snedden,ceo,654345,987654323
 newton,dan,engineer,876789,098765432
 dinh,man,engineer,765456,9876544
 phan,jimmy,engineer,234321,876543212
@@ -9,4 +10,3 @@ Barker,Brandon,loser,011111,12345432
 barker,kathy,female,765467,98798765
 chan,thin,asshat,654654,801-908-9999
 gran,grain,asshat,654644,801-098-0999
-snedden,matt,coo,654345,2016376755

@@ -3,6 +3,7 @@
 #include <vector>
 #include <limits>
 #include <fstream>
+#include <stdio.h>
 
 // custom made header files
 #include "employeeDir.h"
@@ -13,6 +14,8 @@ using std::endl;
 using std::vector;
 using std::ofstream;
 using std::ifstream;
+
+#pragma warning(disable : 4996)
 
 class employeeDirectory {
 public:
@@ -26,30 +29,36 @@ public:
 };
 
 employeeDirectory::employeeDirectory() {
+//	ifstream getDirectoryData("directoryFile.txt");
+//	std::strncpy(lastName, );
+//	std::strncpy(firstName, );
+//	std::strncpy(position, );
+	// use this space to copy empID
+//	std::strncpy(phoneNumber, );
 
 }
 
 employeeDirectory::~employeeDirectory() {
-	delete lastName;
-	delete firstName;
-	delete position;
-	delete phoneNumber;
+//	delete lastName;
+//	delete firstName;
+//	delete position;
+//	delete phoneNumber;
 }
 
 /*
 	TODO:
 	[X]Add employee Directory to main menu
-	[]View or modify employee records.
-		[]If modify, require password
-		[]If view, output directory to screen
+	[X]View or modify employee records.
+		[X]If modify, require password
+		[X]If view, output directory to screen
 	[X]User to input password
-	[]Create records if not already present
-		[]file is comma delimited with one file per line
-		[]Last Name
-		[]First Name
-		[]Position
-		[]Employee ID (6 digits) --> use random number generator to create
-		[]Telephone Number
+	[X]Create records if not already present
+		[X]file is comma delimited with one file per line
+		[X]Last Name
+		[X]First Name
+		[X]Position
+		[X]Employee ID (6 digits) --> use random number generator to create
+		[X]Telephone Number
 	[]Allow the user to change the password if they are logged in to root
 	[]Directory permissions--> 644(rw,r,r)
 	[]Do not exit unless user prompts to quit
@@ -94,15 +103,15 @@ void createNewDirectory() {
 		TODO:
 		[X] comma delimited
 		[X] last name, first name, position, Emp. Id, Phone Number
-		[] offer option to edit directory
+		[] offer option to edit directory (returns to menu any way)
 	*/
 	//ofstream createDirectoryFile("directoryFile");
 	char userDecideToFillDirectory;
 	char lastName[20];
 	char firstName[20];
 	char position[20];
-	int empID;
-	int phoneNumber;
+	char empID[7];
+	char phoneNumber[13];
 
 	cout << "Would you like to fill in the directory now? [y/n]: ";
 	cin >> userDecideToFillDirectory;
@@ -158,7 +167,7 @@ void passwordChange() {
 	// [X] close the file with new password saved to file
 
 	char newPassword[17];
-	cout << "What is the new password: ";
+	cout << "What is the new password(max length 16 chars): ";
 	cin >> newPassword;
 	
 	cout << "Verify password: ";
@@ -177,13 +186,119 @@ void passwordChange() {
 	}
 }
 
+void editAccountDirectory() {
+	/*
+		[] look up user by name (decided this was not unique enough)
+		[X] look up user by empid
+		[X] look up user by phone number
+		[X] modify account
+		[X] output new information to account
+	*/
+
+	char lastName[20];
+	char firstName[20];
+	char position[20];
+	char empID[7];
+	char phoneNumber[13];
+
+	char inputPhone[13];
+	char inputEmpID[7];
+
+	char testDirectory[256];
+
+	unsigned int userSelection;
+
+	cout << "Enter key to identify account holder: " << endl
+		<< "1) Employee ID" << endl
+		<< "2) Phone Number" << endl;
+	cin >> userSelection;
+
+	if (userSelection == 1) {
+		cout << "Enter Employee ID: ";
+		cin >> inputEmpID;
+	}
+	else {
+		cout << "Enter the Employee's Phone Number: ";
+		cin >> inputPhone;
+	}
+
+	ifstream readDirectory("directoryFile.txt");
+	char delAccount;
+
+	cout << "Would you like to delete this account?[y/n]: ";
+	cin >> delAccount;
+
+	while (!readDirectory.eof()) {
+		readDirectory.getline(testDirectory, 256);
+		if (strncmp(testDirectory, "", 1) == 0) {
+
+		}
+		else {
+			strncpy_s(lastName, strtok(testDirectory, ","), 20);
+			strncpy_s(firstName, strtok(NULL, ","), 20);
+			strncpy_s(position, strtok(NULL, ","), 20);
+			strncpy_s(empID, strtok(NULL, ","), 7);
+			strncpy_s(phoneNumber, strtok(NULL, ","), 12);
+			if ((strncmp(empID, inputEmpID, 7) == 0) && (delAccount == 'y')) {
+				ofstream createDirectoryFile("directoryFileNew.txt", std::ios::app | std::ios::out);
+				createDirectoryFile.close();
+			}
+			else if (strncmp(empID, inputEmpID, 7) == 0) {
+				ofstream createDirectoryFile("directoryFileNew.txt", std::ios::app | std::ios::out);
+
+				cout << "Last Name: ";
+				cin >> lastName;
+
+				cout << "First Name: ";
+				cin >> firstName;
+
+				cout << "Position: ";
+				cin >> position;
+
+				cout << "Employee Id (6 digit): ";
+				cin >> empID;
+				while (!strnlen(empID, 7)) {
+					cout << "Employee Id (6 digits): ";
+					cin >> empID;
+				}
+				cout << "Phone Number: ";
+				cin >> phoneNumber;
+
+				createDirectoryFile << lastName << "," << firstName << "," << position
+					<< "," << empID << "," << phoneNumber << endl;
+				createDirectoryFile.close();
+			}
+			else {
+				ofstream createDirectoryFile("directoryFileNew.txt",std::ios::app | std::ios::out);
+				createDirectoryFile << lastName << "," << firstName << "," << position
+					<< "," << empID << "," << phoneNumber << endl;
+				createDirectoryFile.close();
+			}
+		}
+	}
+	readDirectory.close();
+	if (remove("directoryFile.txt") != 0) {
+		perror("Error in deleting the file.");
+	}
+	else {
+		puts("File successfully deleted.");
+	}
+	int result = rename("directoryFileNew.txt", "directoryFile.txt");
+	if (result == 0) {
+		cout << "Rename was successful!" << endl;
+	}
+	else {
+		perror("Error renaming the file.");
+	}
+}
+
 void editDirectory() {
 
 	char lastName[20];
 	char firstName[20];
 	char position[20];
-	int empID;
-	int phoneNumber;
+	char empID[7];
+	char phoneNumber[13];
 
 	cout << "The file is comma delimited with order: ";
 	cout << "Last Name, First Name, Position, Employee Id, Phone Number" << endl;
@@ -201,15 +316,20 @@ void editDirectory() {
 		cout << "Position: ";
 		cin >> position;
 
-		cout << "Employee Id: ";
+		cout << "Employee Id (6 digit): ";
 		cin >> empID;
-
+		while (!strnlen(empID,7)) {
+			cout << "Employee Id (6 digits): ";
+			cin >> empID;
+		}
 		cout << "Phone Number: ";
 		cin >> phoneNumber;
 
 		createDirectoryFile << lastName << "," << firstName << "," << position
 			<< "," << empID << "," << phoneNumber << endl;
 		createDirectoryFile.close();
+
+		employeeDirectory();
 
 		char exitHere;
 		cout << "Would you like to exit this program? [y/n]: ";
@@ -225,8 +345,7 @@ void editDirectory() {
 }
 
 void viewDirectory() {
-	// TODO:
-	// [] display the directory
+	// [X] display the directory
 
 	vector <char *> directoryContents;
 	char testDirectory[256];
@@ -255,18 +374,19 @@ void modifyDirectory() {
 	/*
 		TODO:
 		[X] request and verify password
-		[] display directory?
+		[X] display directory?
 		[] allow the user to modify the directory
-		[] save the directory
-		[] change password
+		[X] save the directory
+		[X] change password
 	*/
 
 	if (directoryPasswordCheck()) {
 		vector <char const*> modifyOptionsMenu;
 		
 		modifyOptionsMenu.push_back("Change Password");
-		modifyOptionsMenu.push_back("Edit Directory");
+		modifyOptionsMenu.push_back("Append to the Directory");
 		modifyOptionsMenu.push_back("View Directory");
+		modifyOptionsMenu.push_back("Edit specific account in Directory");
 		modifyOptionsMenu.push_back("Exit");
 		const int modifyExit = modifyOptionsMenu.size();
 		int modifyUserInput;
@@ -285,7 +405,7 @@ void modifyDirectory() {
 				passwordChange();
 				break;
 			case 2:
-				cout << "Modify the directory." << endl;
+				cout << "Append to the directory." << endl;
 				if (does_file_exist()) {
 					editDirectory();
 				}
@@ -300,6 +420,10 @@ void modifyDirectory() {
 				viewDirectory();
 				break;
 			case 4:
+				cout << "Editing specific account in directory." << endl;
+				editAccountDirectory();
+				break;
+			case 5:
 				cout << "You are now exiting the menu." << endl;
 				break;
 			default:
@@ -323,7 +447,7 @@ void employeeDir() {
 	char dirOptionExit[5] = "Exit";*/
 
 	vector <char const*> dirOptions;
-	vector <employeeDirectory> employeeData;
+	//vector <employeeDirectory> employeeData;
 
 	dirOptions.push_back("View Directory");
 	dirOptions.push_back("Modify Directory");
