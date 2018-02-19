@@ -319,7 +319,7 @@ void editAccountDirectory() {
 			strncpy(position, strtok(NULL, ","), 20);
 			strncpy(empID, strtok(NULL, ","), 7);
 			strncpy(phoneNumber, strtok(NULL, ","), 13);
-			if ((strncmp(empID, inputEmpID, 7) == 0) && (delAccount == 'y')) {
+			if (((strncmp(empID, inputEmpID, 7) == 0) && (delAccount == 'y')) || ((strncmp(phoneNumber, inputPhone, 13) == 0) && (delAccount == 'y'))) {
 				// setuid, code snippet from
 				// https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
 				int status;
@@ -341,7 +341,7 @@ void editAccountDirectory() {
 				}
 					createDirectoryFile.close();
 			}
-			else if (strncmp(empID, inputEmpID, 7) == 0) {
+			else if ((strncmp(empID, inputEmpID, 7) == 0) || (strncmp(phoneNumber, inputPhone, 13) == 0)) {
 				// setuid, code snippet from
 				// https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
 				int status;
@@ -503,10 +503,12 @@ void viewDirectory() {
 
 	ifstream directoryFile("directoryFile.txt");
 	if (directoryFile.is_open()) {
+		cout << endl << "Last Name, First Name, Position, Emp ID, Phone Number" << endl;
 		while (!directoryFile.eof()){
 				directoryFile.getline(testDirectory, 256);
 				//directoryFile.getline(directoryContents, 20);
 				if (strncmp(testDirectory,"",1) == 0) {
+					cout << endl;
 				}
 				else {
 					cout << "contents are: " << testDirectory << endl;
@@ -633,11 +635,9 @@ void employeeDir() {
 		switch (userInputDirOption)
 		{
 		case 1:
-			cout << userInputDirOption << endl;
 			viewDirectory(); // go to viewDirectory and print the directory
 			break;
 		case 2:
-			cout << userInputDirOption << endl;
 			modifyDirectory(); // go to modify directory
 			break;
 		case 3:
