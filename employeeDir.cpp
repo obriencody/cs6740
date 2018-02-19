@@ -83,31 +83,31 @@ bool directoryPasswordCheck() {
 
 	cout << "You typed: " << userInputPassword << endl;
 
-    // setuid, code snippet from
-    // https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
-    int status;
-    #ifdef _POSIX_SAVED_IDS
-    status = seteuid(effectiveUID);
-    #else
-    status = setreuid(realUID, effectiveUID);
-    #endif
-    if(status == 0){
-        cout << "Error in elevating privileges!" << endl;
-    }
-    // open the file
+	// setuid, code snippet from
+	// https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
+	int status;
+	#ifdef _POSIX_SAVED_IDS
+	status = seteuid(effectiveUID);
+	#else
+	status = setreuid(realUID, effectiveUID);
+	#endif
+	if(status == 0){
+		cout << "Error in elevating privileges!" << endl;
+	}
+	// open the file
 	ifstream actualPasswordFile("accessFile.txt");
-    
-    // un-set UID
-    // https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
-    #ifdef _POSIX_SAVED_IDS
-    status = seteuid(realUID);
-    #else
-    status = setreuid(effectiveUID,realUID);
-    #endif
-    if(status < 0){
-        cout << "Error in dropping levels!" << endl;
-    }
-    
+	
+	// un-set UID
+	// https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
+	#ifdef _POSIX_SAVED_IDS
+	status = seteuid(realUID);
+	#else
+	status = setreuid(effectiveUID,realUID);
+	#endif
+	if(status < 0){
+		cout << "Error in dropping levels!" << endl;
+	}
+	
 	char password[17];
 	
 	actualPasswordFile.get(password, 17);
@@ -147,25 +147,25 @@ void createNewDirectory() {
 
 	if ((userDecideToFillDirectory != 'y')) {
 		cout << "An empty file has been created." << endl;
-            // setuid, code snippet from
-    // https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
-    int status;
-    #ifdef _POSIX_SAVED_IDS
-    status = seteuid(effectiveUID);
-    #else
-    status = setreuid(realUID, effectiveUID);
-    #endif
+		// setuid, code snippet from
+		// https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
+		int status;
+		#ifdef _POSIX_SAVED_IDS
+		status = seteuid(effectiveUID);
+		#else
+		status = setreuid(realUID, effectiveUID);
+		#endif
 		ofstream createDirectoryFile("directoryFile.txt");
-            // un-set UID
-    // https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
-    #ifdef _POSIX_SAVED_IDS
-    status = seteuid(realUID);
-    #else
-    status = setreuid(effectiveUID,realUID);
-    #endif
-    if(status < 0){
-        cout << "Error in dropping levels!" << endl;
-    }
+		// un-set UID
+		// https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
+		#ifdef _POSIX_SAVED_IDS
+		status = seteuid(realUID);
+		#else
+		status = setreuid(effectiveUID,realUID);
+		#endif
+		if(status < 0){
+			cout << "Error in dropping levels!" << endl;
+		}
 		createDirectoryFile.close();
 	}
 	else {
@@ -174,25 +174,25 @@ void createNewDirectory() {
 		
 		bool exitLoop = false; // use to stop inputting data in directory file
 		while (!exitLoop) {
-            // setuid, code snippet from
-    // https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
-    int status;
-    #ifdef _POSIX_SAVED_IDS
-    status = seteuid(effectiveUID);
-    #else
-    status = setreuid(realUID, effectiveUID);
-    #endif
+			// setuid, code snippet from
+			// https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
+			int status;
+			#ifdef _POSIX_SAVED_IDS
+			status = seteuid(effectiveUID);
+			#else
+			status = setreuid(realUID, effectiveUID);
+			#endif
 			ofstream createDirectoryFile("directoryFile.txt", std::ios::app | std::ios::out);
-            // un-set UID
-            // https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
-            #ifdef _POSIX_SAVED_IDS
-            status = seteuid(realUID);
-            #else
-            status = setreuid(effectiveUID,realUID);
-            #endif
-            if(status < 0){
-                cout << "Error in dropping levels!" << endl;
-            }
+			// un-set UID
+			// https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
+			#ifdef _POSIX_SAVED_IDS
+			status = seteuid(realUID);
+			#else
+			status = setreuid(effectiveUID,realUID);
+			#endif
+			if(status < 0){
+				cout << "Error in dropping levels!" << endl;
+			}
 			cout << "Last Name: ";
 			cin >> lastName;
 
@@ -239,25 +239,25 @@ void passwordChange() {
 	cin >> passwordVerify;
 	
 	if (strncmp(newPassword, passwordVerify, 17) == 0) {
-    // setuid, code snippet from
-    // https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
-    int status;
-    #ifdef _POSIX_SAVED_IDS
-    status = seteuid(effectiveUID);
-    #else
-    status = setreuid(realUID, effectiveUID);
-    #endif
+		// setuid, code snippet from
+		// https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
+		int status;
+		#ifdef _POSIX_SAVED_IDS
+		status = seteuid(effectiveUID);
+		#else
+		status = setreuid(realUID, effectiveUID);
+		#endif
 		ofstream modifyPasswordFile("accessFile.txt");
-            // un-set UID
-            // https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
-            #ifdef _POSIX_SAVED_IDS
-            status = seteuid(realUID);
-            #else
-            status = setreuid(effectiveUID,realUID);
-            #endif
-            if(status < 0){
-                cout << "Error in dropping levels!" << endl;
-            }
+		// un-set UID
+		// https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
+		#ifdef _POSIX_SAVED_IDS
+		status = seteuid(realUID);
+		#else
+		status = setreuid(effectiveUID,realUID);
+		#endif
+		if(status < 0){
+			cout << "Error in dropping levels!" << endl;
+		}
 		modifyPasswordFile.write(newPassword, strlen(newPassword));
 		modifyPasswordFile.close(); // close the file
 	}
@@ -320,47 +320,47 @@ void editAccountDirectory() {
 			strncpy(empID, strtok(NULL, ","), 7);
 			strncpy(phoneNumber, strtok(NULL, ","), 13);
 			if ((strncmp(empID, inputEmpID, 7) == 0) && (delAccount == 'y')) {
-    // setuid, code snippet from
-    // https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
-    int status;
-    #ifdef _POSIX_SAVED_IDS
-    status = seteuid(effectiveUID);
-    #else
-    status = setreuid(realUID, effectiveUID);
-    #endif
+				// setuid, code snippet from
+				// https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
+				int status;
+				#ifdef _POSIX_SAVED_IDS
+				status = seteuid(effectiveUID);
+				#else
+				status = setreuid(realUID, effectiveUID);
+				#endif
 				ofstream createDirectoryFile("directoryFileNew.txt", std::ios::app | std::ios::out);
-            // un-set UID
-            // https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
-            #ifdef _POSIX_SAVED_IDS
-            status = seteuid(realUID);
-            #else
-            status = setreuid(effectiveUID,realUID);
-            #endif
-            if(status < 0){
-                cout << "Error in dropping levels!" << endl;
-            }
-				createDirectoryFile.close();
+				// un-set UID
+				// https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
+				#ifdef _POSIX_SAVED_IDS
+				status = seteuid(realUID);
+				#else
+				status = setreuid(effectiveUID,realUID);
+				#endif
+				if(status < 0){
+					cout << "Error in dropping levels!" << endl;
+				}
+					createDirectoryFile.close();
 			}
 			else if (strncmp(empID, inputEmpID, 7) == 0) {
-    // setuid, code snippet from
-    // https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
-    int status;
-    #ifdef _POSIX_SAVED_IDS
-    status = seteuid(effectiveUID);
-    #else
-    status = setreuid(realUID, effectiveUID);
-    #endif
+				// setuid, code snippet from
+				// https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
+				int status;
+				#ifdef _POSIX_SAVED_IDS
+				status = seteuid(effectiveUID);
+				#else
+				status = setreuid(realUID, effectiveUID);
+				#endif
 				ofstream createDirectoryFile("directoryFileNew.txt", std::ios::app | std::ios::out);
-            // un-set UID
-            // https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
-            #ifdef _POSIX_SAVED_IDS
-            status = seteuid(realUID);
-            #else
-            status = setreuid(effectiveUID,realUID);
-            #endif
-            if(status < 0){
-                cout << "Error in dropping levels!" << endl;
-            }
+				// un-set UID
+				// https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
+				#ifdef _POSIX_SAVED_IDS
+				status = seteuid(realUID);
+				#else
+				status = setreuid(effectiveUID,realUID);
+				#endif
+				if(status < 0){
+					cout << "Error in dropping levels!" << endl;
+				}
 				cout << "Last Name: ";
 				cin >> lastName;
 
@@ -384,25 +384,25 @@ void editAccountDirectory() {
 				createDirectoryFile.close();
 			}
 			else {
-    // setuid, code snippet from
-    // https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
-    int status;
-    #ifdef _POSIX_SAVED_IDS
-    status = seteuid(effectiveUID);
-    #else
-    status = setreuid(realUID, effectiveUID);
-    #endif
+				// setuid, code snippet from
+				// https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
+				int status;
+				#ifdef _POSIX_SAVED_IDS
+				status = seteuid(effectiveUID);
+				#else
+				status = setreuid(realUID, effectiveUID);
+				#endif
 				ofstream createDirectoryFile("directoryFileNew.txt",std::ios::app | std::ios::out);
-            // un-set UID
-            // https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
-            #ifdef _POSIX_SAVED_IDS
-            status = seteuid(realUID);
-            #else
-            status = setreuid(effectiveUID,realUID);
-            #endif
-            if(status < 0){
-                cout << "Error in dropping levels!" << endl;
-            }
+				// un-set UID
+				// https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
+				#ifdef _POSIX_SAVED_IDS
+				status = seteuid(realUID);
+				#else
+				status = setreuid(effectiveUID,realUID);
+				#endif
+				if(status < 0){
+					cout << "Error in dropping levels!" << endl;
+				}
 				createDirectoryFile << lastName << "," << firstName << "," << position
 					<< "," << empID << "," << phoneNumber << endl;
 				createDirectoryFile.close();
@@ -438,25 +438,25 @@ void editDirectory() {
 
 	bool exitLoop = false; // use to stop inputting data in directory file
 	while (!exitLoop) {
-    // setuid, code snippet from
-    // https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
-    int status;
-    #ifdef _POSIX_SAVED_IDS
-    status = seteuid(effectiveUID);
-    #else
-    status = setreuid(realUID, effectiveUID);
-    #endif
+		// setuid, code snippet from
+		// https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
+		int status;
+		#ifdef _POSIX_SAVED_IDS
+		status = seteuid(effectiveUID);
+		#else
+		status = setreuid(realUID, effectiveUID);
+		#endif
 		ofstream createDirectoryFile("directoryFile.txt", std::ios::app | std::ios::out);
-            // un-set UID
-            // https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
-            #ifdef _POSIX_SAVED_IDS
-            status = seteuid(realUID);
-            #else
-            status = setreuid(effectiveUID,realUID);
-            #endif
-            if(status < 0){
-                cout << "Error in dropping levels!" << endl;
-            }
+		// un-set UID
+		// https://www.gnu.org/software/libc/manual/html_node/Setuid-Program-Example.html
+		#ifdef _POSIX_SAVED_IDS
+		status = seteuid(realUID);
+		#else
+		status = setreuid(effectiveUID,realUID);
+		#endif
+		if(status < 0){
+			cout << "Error in dropping levels!" << endl;
+		}
 
 		cout << "Last Name: ";
 		cin >> lastName;
